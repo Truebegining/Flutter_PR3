@@ -91,7 +91,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     Text(
                       'Гаджиев Самир Надирович\n'
                       'Группа: ИКБО-11-22\n'
-                      'Студенческий билет: 22И0571',
+                      'Студенческий билет: 22И0571.',
                       style: TextStyle(fontSize: 14),
                     ),
                   ],
