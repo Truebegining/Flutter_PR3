@@ -1,74 +1,73 @@
-import 'package:flutter/cupertino.dart';
-import 'countries_screen.dart';
-import 'attractions_screen.dart';
-import 'planner_screen.dart';
+import 'package:flutter/material.dart';
+import 'recipes_screen.dart';
+import 'ingredients_screen.dart';
+import 'menu_screen.dart';
 import 'about_screen.dart';
-import 'travel_counter.dart';
+import 'cooking_counter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Путешествия'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Кулинарный дневник'),
+        centerTitle: true,
       ),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              const TravelCounter(),
-              const SizedBox(height: 30),
-              const Text(
-                'Выберите раздел:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            const CookingCounter(),
+            const SizedBox(height: 30),
+            const Text(
+              'Выберите раздел:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
               ),
-              const SizedBox(height: 20),
-              _buildMenuButton(
-                context,
-                '🌍 Страны',
-                'Изучите разные страны мира',
-                () => Navigator.of(context).push(
-                  CupertinoPageRoute(builder: (context) => const CountriesScreen()),
-                ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            _buildMenuButton(
+              context,
+              '🍳 Рецепты',
+              'Коллекция ваших любимых рецептов',
+              () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const RecipesScreen()),
               ),
-              const SizedBox(height: 12),
-              _buildMenuButton(
-                context,
-                '🏛️ Достопримечательности',
-                'Узнайте о знаменитых местах',
-                () => Navigator.of(context).push(
-                  CupertinoPageRoute(builder: (context) => const AttractionsScreen()),
-                ),
+            ),
+            const SizedBox(height: 12),
+            _buildMenuButton(
+              context,
+              '🥕 Ингредиенты',
+              'База продуктов и ингредиентов',
+              () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const IngredientsScreen()),
               ),
-              const SizedBox(height: 12),
-              _buildMenuButton(
-                context,
-                '📅 Планировщик',
-                'Спланируйте свое путешествие',
-                () => Navigator.of(context).push(
-                  CupertinoPageRoute(builder: (context) => const PlannerScreen()),
-                ),
+            ),
+            const SizedBox(height: 12),
+            _buildMenuButton(
+              context,
+              '📋 Меню',
+              'Планирование блюд и меню',
+              () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const MenuScreen()),
               ),
-              const SizedBox(height: 12),
-              _buildMenuButton(
-                context,
-                'ℹ️ О приложении',
-                'Информация о приложении',
-                () => Navigator.of(context).push(
-                  CupertinoPageRoute(builder: (context) => const AboutScreen()),
-                ),
+            ),
+            const SizedBox(height: 12),
+            _buildMenuButton(
+              context,
+              'ℹ️ О приложении',
+              'Информация о приложении',
+              () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const AboutScreen()),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -80,45 +79,42 @@ class HomeScreen extends StatelessWidget {
     String subtitle,
     VoidCallback onTap,
   ) {
-    return CupertinoButton(
-      padding: EdgeInsets.zero,
-      onPressed: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: CupertinoColors.systemGrey6,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: CupertinoColors.label,
+    return Card(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: CupertinoColors.secondaryLabel,
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const Icon(
-              CupertinoIcons.chevron_right,
-              color: Color.fromRGBO(142, 142, 147, 1),
-            ),
-          ],
+              const Icon(
+                Icons.chevron_right,
+                color: Colors.grey,
+              ),
+            ],
+          ),
         ),
       ),
     );
