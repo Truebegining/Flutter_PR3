@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'routes/app_routes.dart';
 
 void main() {
+  // Инициализация маршрутной карты при старте приложения
+  AppRoutes.initialize();
   runApp(const CookingApp());
 }
 
@@ -10,8 +12,9 @@ class CookingApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Кулинарный дневник',
+      routerConfig: AppRoutes.router,
       theme: ThemeData(
         primarySwatch: Colors.orange,
         primaryColor: Colors.orange,
@@ -37,7 +40,6 @@ class CookingApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const HomeScreen()
     );
   }
 }

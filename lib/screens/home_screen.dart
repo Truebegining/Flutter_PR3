@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'recipes_screen.dart';
 import 'ingredients_screen.dart';
 import 'menu_screen.dart';
 import 'about_screen.dart';
 import 'cooking_counter.dart';
+import '../routes/app_routes.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -32,44 +34,49 @@ class HomeScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            // Вертикальная навигация: Navigator.push добавляет новую страницу в стек навигации
+            // Доступ к навигационному делегату через контекст приложения
+            // Вертикальная навигация: context.push() использует навигационный делегат GoRouter
+            // Метод push теперь принимает маршрут из маршрутной карты, а не страницу
             // При переходе предыдущая страница сохраняется в памяти и доступна для возврата
             _buildMenuButton(
               context,
               '🍳 Рецепты',
               'Коллекция ваших любимых рецептов',
-              () => Navigator.of(context).push(
-                // MaterialPageRoute создает маршрут для перехода между страницами
-                // Новая страница добавляется поверх стека, пользователь может вернуться назад
-                MaterialPageRoute(builder: (context) => const RecipesScreen()),
-              ),
+              () {
+                context.push(
+                  AppRoutes.recipes,
+                );
+              },
             ),
             const SizedBox(height: 12),
             _buildMenuButton(
               context,
               '🥕 Ингредиенты',
               'База продуктов и ингредиентов',
-              () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const IngredientsScreen()),
-              ),
+              () {
+                // Навигационный делегат через контекст, используем маршрут из карты
+                context.push(AppRoutes.ingredients);
+              },
             ),
             const SizedBox(height: 12),
             _buildMenuButton(
               context,
               '📋 Меню',
               'Планирование блюд и меню',
-              () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const MenuScreen()),
-              ),
+              () {
+                // Навигационный делегат через контекст, используем маршрут из карты
+                context.push(AppRoutes.menu);
+              },
             ),
             const SizedBox(height: 12),
             _buildMenuButton(
               context,
               'ℹ️ О приложении',
               'Информация о приложении',
-              () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AboutScreen()),
-              ),
+              () {
+                // Навигационный делегат через контекст, используем маршрут из карты
+                context.push(AppRoutes.about);
+              },
             ),
           ],
         ),
