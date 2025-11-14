@@ -10,24 +10,8 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  // Навигационный делегат доступен через контекст приложения в любом месте
-  // Метод context.pop() автоматически вызывается кнопкой "назад" в AppBar
-  // Он удаляет текущую страницу из стека навигации и возвращает к предыдущей
-  // Можно также использовать context.pop() программно для возврата
-  
-  // Вертикальная навигация: context.push() добавляет маршрут в стек навигации
-  // Вместо передачи MaterialPageRoute мы передаем маршрут из маршрутной карты
-  // Предыдущая страница сохраняется в памяти и доступна для возврата
-
-  // Горизонтальная навигация: context.go() заменяет текущий маршрут
-  // В отличие от context.push, который добавляет в стек, go заменяет текущий маршрут
-  // Пользователь не сможет вернуться к предыдущей странице через кнопку "назад"
-  // В качестве аргумента передается маршрут из маршрутной карты, а не страница
   void _goToHomeWithReplacement() {
-    // Доступ к навигационному делегату через контекст
-    // Метод pushReplacement теперь принимает маршрут, а не страницу
     context.go(
-      // Использование маршрута из маршрутной карты вместо создания MaterialPageRoute
       AppRoutes.home,
     );
   }
@@ -38,8 +22,6 @@ class _AboutScreenState extends State<AboutScreen> {
       appBar: AppBar(
         title: const Text('О приложении'),
         centerTitle: true,
-        // Кнопка "назад" в AppBar автоматически вызывает навигационный делегат через контекст
-        // Используется context.pop() вместо Navigator.pop(context)
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -119,7 +101,6 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
             ),
             const SizedBox(height: 30),
-            // Пример горизонтальной навигации с использованием pushReplacement
             Card(
               color: Colors.orange.withOpacity(0.1),
               child: Padding(

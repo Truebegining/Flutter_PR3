@@ -34,10 +34,6 @@ class HomeScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            // Доступ к навигационному делегату через контекст приложения
-            // Вертикальная навигация: context.push() использует навигационный делегат GoRouter
-            // Метод push теперь принимает маршрут из маршрутной карты, а не страницу
-            // При переходе предыдущая страница сохраняется в памяти и доступна для возврата
             _buildMenuButton(
               context,
               '🍳 Рецепты',
@@ -54,7 +50,6 @@ class HomeScreen extends StatelessWidget {
               '🥕 Ингредиенты',
               'База продуктов и ингредиентов',
               () {
-                // Навигационный делегат через контекст, используем маршрут из карты
                 context.push(AppRoutes.ingredients);
               },
             ),
@@ -64,7 +59,6 @@ class HomeScreen extends StatelessWidget {
               '📋 Меню',
               'Планирование блюд и меню',
               () {
-                // Навигационный делегат через контекст, используем маршрут из карты
                 context.push(AppRoutes.menu);
               },
             ),
@@ -74,7 +68,6 @@ class HomeScreen extends StatelessWidget {
               'ℹ️ О приложении',
               'Информация о приложении',
               () {
-                // Навигационный делегат через контекст, используем маршрут из карты
                 context.push(AppRoutes.about);
               },
             ),
