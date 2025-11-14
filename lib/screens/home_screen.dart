@@ -32,11 +32,15 @@ class HomeScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
+            // Вертикальная навигация: Navigator.push добавляет новую страницу в стек навигации
+            // При переходе предыдущая страница сохраняется в памяти и доступна для возврата
             _buildMenuButton(
               context,
               '🍳 Рецепты',
               'Коллекция ваших любимых рецептов',
               () => Navigator.of(context).push(
+                // MaterialPageRoute создает маршрут для перехода между страницами
+                // Новая страница добавляется поверх стека, пользователь может вернуться назад
                 MaterialPageRoute(builder: (context) => const RecipesScreen()),
               ),
             ),

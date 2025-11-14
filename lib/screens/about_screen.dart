@@ -28,11 +28,11 @@ class _AboutScreenState extends State<AboutScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               'Версия 1.0.0',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey[600],
+                color: Colors.grey,
               ),
               textAlign: TextAlign.center,
             ),
@@ -40,28 +40,28 @@ class _AboutScreenState extends State<AboutScreen> {
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(20),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'О приложении',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    const Text(
+                    SizedBox(height: 12),
+                    Text(
                       'Это простое приложение для изучения Flutter, которое поможет вам:',
                       style: TextStyle(fontSize: 16),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      '• Коллекционировать любимые рецепты\n'
-                      '• Отмечать приготовленные блюда\n'
-                      '• Добавлять ингредиенты в избранное\n'
-                      '• Планировать свое меню\n'
-                      '• Считать количество приготовленных блюд',
+                    SizedBox(height: 8),
+                    Text(
+                      '• Сохранять и просматривать рецепты\n'
+                      '• Управлять базой ингредиентов\n'
+                      '• Планировать меню на неделю\n'
+                      '• Отслеживать приготовленные блюда\n'
+                      '• Ведение кулинарного дневника',
                       style: TextStyle(fontSize: 14),
                     ),
                   ],
@@ -72,18 +72,18 @@ class _AboutScreenState extends State<AboutScreen> {
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(20),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Разработчик',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    const Text(
+                    SizedBox(height: 12),
+                    Text(
                       'Гаджиев Самир Надирович\n'
                       'Группа: ИКБО-11-22\n'
                       'Студенческий билет: 22И0571.',
