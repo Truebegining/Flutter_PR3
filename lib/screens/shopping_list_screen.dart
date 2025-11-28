@@ -1,45 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/shopping_list_provider.dart';
 
-class ShoppingListScreen extends StatefulWidget {
+class ShoppingListScreen extends ConsumerStatefulWidget {
   const ShoppingListScreen({super.key});
 
   @override
-  State<ShoppingListScreen> createState() => _ShoppingListScreenState();
+  ConsumerState<ShoppingListScreen> createState() => _ShoppingListScreenState();
 }
 
-class _ShoppingListScreenState extends State<ShoppingListScreen> {
-  final List<Map<String, dynamic>> _shoppingItems = [];
+class _ShoppingListScreenState extends ConsumerState<ShoppingListScreen> {
   final TextEditingController _itemController = TextEditingController();
 
-  // Метод для добавления нового пункта в список
   void _addItem() {
     if (_itemController.text.isNotEmpty) {
-      setState(() {
-        _shoppingItems.add({
-          'name': _itemController.text,
-          'isBought': false,
-        });
-      });
+      ref.read(shoppingListProvider.notifier).addItem(_itemController.text);
       _itemController.clear();
     }
   }
 
-  // Метод для отметки пункта как купленного
-  void _toggleItem(int index) {
-    setState(() {
-      _shoppingItems[index]['isBought'] = !_shoppingItems[index]['isBought'];
-    });
-  }
-
-  // Метод для удаления пункта
-  void _deleteItem(int index) {
-    setState(() {
-      _shoppingItems.removeAt(index);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final shoppingItems = ref.watch(shoppingListProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Список покупок'),
@@ -49,7 +32,6 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Поле для ввода нового пункта
             Row(
               children: [
                 Expanded(
@@ -59,6 +41,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                       labelText: 'Что нужно купить?',
                       border: OutlineInputBorder(),
                     ),
+                    onSubmitted: (_) => _addItem(),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -69,35 +52,33 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
               ],
             ),
             const SizedBox(height: 20),
-
-            // Список пунктов
             Expanded(
-              child: _shoppingItems.isEmpty
+              child: shoppingItems.isEmpty
                   ? const Center(
                       child: Text('Список покупок пуст!', style: TextStyle(fontSize: 16, color: Colors.grey)),
                     )
                   : ListView.builder(
-                      itemCount: _shoppingItems.length,
+                      itemCount: shoppingItems.length,
                       itemBuilder: (context, index) {
-                        final item = _shoppingItems[index];
+                        final item = shoppingItems[index];
                         return Card(
-                          color: item['isBought'] ? Colors.grey[200] : null,
+                          color: item.isBought ? Colors.grey[200] : null,
                           child: ListTile(
                             title: Text(
-                              item['name'],
+                              item.name,
                               style: TextStyle(
-                                decoration: item['isBought']
+                                decoration: item.isBought
                                     ? TextDecoration.lineThrough
                                     : null,
                               ),
                             ),
                             leading: Checkbox(
-                              value: item['isBought'],
-                              onChanged: (_) => _toggleItem(index),
+                              value: item.isBought,
+                              onChanged: (_) => ref.read(shoppingListProvider.notifier).toggleItem(item.id),
                             ),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => _deleteItem(index),
+                              onPressed: () => ref.read(shoppingListProvider.notifier).deleteItem(item.id),
                             ),
                           ),
                         );
