@@ -1,59 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/recipes_provider.dart';
 
-class RecipesScreen extends StatefulWidget {
+class RecipesScreen extends ConsumerWidget {
   const RecipesScreen({super.key});
 
   @override
-  State<RecipesScreen> createState() => _RecipesScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recipes = ref.watch(recipesProvider);
 
-class _RecipesScreenState extends State<RecipesScreen> {
-  final List<Map<String, dynamic>> _recipes = [
-    {
-      'name': 'Борщ украинский',
-      'category': 'Супы',
-      'icon': '🍲',
-      'description': 'Традиционный украинский борщ с мясом и овощами',
-      'isCooked': false,
-    },
-    {
-      'name': 'Пицца Маргарита',
-      'category': 'Итальянская',
-      'icon': '🍕',
-      'description': 'Классическая итальянская пицца с томатами и моцареллой',
-      'isCooked': false,
-    },
-    {
-      'name': 'Суши роллы',
-      'category': 'Японская',
-      'icon': '🍣',
-      'description': 'Традиционные японские роллы с рисом и рыбой',
-      'isCooked': false,
-    },
-    {
-      'name': 'Паэлья',
-      'category': 'Испанская',
-      'icon': '🥘',
-      'description': 'Испанское блюдо из риса с морепродуктами',
-      'isCooked': false,
-    },
-    {
-      'name': 'Шницель',
-      'category': 'Немецкая',
-      'icon': '🥩',
-      'description': 'Венский шницель в панировке',
-      'isCooked': false,
-    },
-  ];
-
-  void _toggleCooked(int index) {
-    setState(() {
-      _recipes[index]['isCooked'] = !_recipes[index]['isCooked'];
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Рецепты'),
@@ -61,21 +16,21 @@ class _RecipesScreenState extends State<RecipesScreen> {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: _recipes.length,
+        itemCount: recipes.length,
         itemBuilder: (context, index) {
-          final recipe = _recipes[index];
+          final recipe = recipes[index];
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
-            color: recipe['isCooked'] 
+            color: recipe.isCooked
                 ? Colors.green.withOpacity(0.1)
                 : null,
             child: ListTile(
               leading: Text(
-                recipe['icon'],
+                recipe.icon,
                 style: const TextStyle(fontSize: 32),
               ),
               title: Text(
-                recipe['name'],
+                recipe.name,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -86,7 +41,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
                 children: [
                   const SizedBox(height: 4),
                   Text(
-                    'Категория: ${recipe['category']}',
+                    'Категория: ${recipe.category}',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -94,7 +49,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    recipe['description'],
+                    recipe.description,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[500],
@@ -103,11 +58,12 @@ class _RecipesScreenState extends State<RecipesScreen> {
                 ],
               ),
               trailing: Checkbox(
-                value: recipe['isCooked'],
-                onChanged: (_) => _toggleCooked(index),
+                value: recipe.isCooked,
+                // 4. Вызываем метод из провайдера для изменения состояния
+                onChanged: (_) => ref.read(recipesProvider.notifier).toggleCooked(recipe.id),
                 activeColor: Colors.green,
               ),
-              onTap: () => _toggleCooked(index),
+              onTap: () => ref.read(recipesProvider.notifier).toggleCooked(recipe.id),
             ),
           );
         },

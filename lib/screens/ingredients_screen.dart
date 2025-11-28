@@ -1,66 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/ingredients_provider.dart';
 
-class IngredientsScreen extends StatefulWidget {
+class IngredientsScreen extends ConsumerWidget {
   const IngredientsScreen({super.key});
 
   @override
-  State<IngredientsScreen> createState() => _IngredientsScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ingredients = ref.watch(ingredientsProvider);
 
-class _IngredientsScreenState extends State<IngredientsScreen> {
-  final List<Map<String, dynamic>> _ingredients = [
-    {
-      'name': 'Помидоры',
-      'category': 'Овощи',
-      'icon': '🍅',
-      'description': 'Свежие томаты для салатов и соусов',
-      'isFavorite': false,
-    },
-    {
-      'name': 'Лук',
-      'category': 'Овощи',
-      'icon': '🧅',
-      'description': 'Базовый ингредиент для большинства блюд',
-      'isFavorite': false,
-    },
-    {
-      'name': 'Мясо говядины',
-      'category': 'Мясо',
-      'icon': '🥩',
-      'description': 'Качественная говядина для основных блюд',
-      'isFavorite': false,
-    },
-    {
-      'name': 'Сыр моцарелла',
-      'category': 'Молочные',
-      'icon': '🧀',
-      'description': 'Итальянский сыр для пиццы и пасты',
-      'isFavorite': false,
-    },
-    {
-      'name': 'Рис',
-      'category': 'Крупы',
-      'icon': '🍚',
-      'description': 'Длиннозерный рис для азиатских блюд',
-      'isFavorite': false,
-    },
-    {
-      'name': 'Лосось',
-      'category': 'Рыба',
-      'icon': '🐟',
-      'description': 'Свежий лосось для суши и запекания',
-      'isFavorite': false,
-    },
-  ];
-
-  void _toggleFavorite(int index) {
-    setState(() {
-      _ingredients[index]['isFavorite'] = !_ingredients[index]['isFavorite'];
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ингредиенты'),
@@ -68,21 +16,21 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: _ingredients.length,
+        itemCount: ingredients.length,
         itemBuilder: (context, index) {
-          final ingredient = _ingredients[index];
+          final ingredient = ingredients[index];
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
-            color: ingredient['isFavorite'] 
+            color: ingredient.isFavorite
                 ? Colors.orange.withOpacity(0.1)
                 : null,
             child: ListTile(
               leading: Text(
-                ingredient['icon'],
+                ingredient.icon,
                 style: const TextStyle(fontSize: 32),
               ),
               title: Text(
-                ingredient['name'],
+                ingredient.name,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -93,7 +41,7 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
                 children: [
                   const SizedBox(height: 4),
                   Text(
-                    ingredient['category'],
+                    ingredient.category,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -101,7 +49,7 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    ingredient['description'],
+                    ingredient.description,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[500],
@@ -111,16 +59,21 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
               ),
               trailing: IconButton(
                 icon: Icon(
-                  ingredient['isFavorite'] 
+                  ingredient.isFavorite
                       ? Icons.favorite
                       : Icons.favorite_border,
-                  color: ingredient['isFavorite'] 
+                  color: ingredient.isFavorite
                       ? Colors.red
                       : Colors.grey,
                 ),
-                onPressed: () => _toggleFavorite(index),
+                // 4. Вызываем метод из провайдера для изменения состояния
+                onPressed: () => ref
+                    .read(ingredientsProvider.notifier)
+                    .toggleFavorite(ingredient.id),
               ),
-              onTap: () => _toggleFavorite(index),
+              onTap: () => ref
+                  .read(ingredientsProvider.notifier)
+                  .toggleFavorite(ingredient.id),
             ),
           );
         },

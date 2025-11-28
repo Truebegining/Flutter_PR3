@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/counter_provider.dart';
 
-class CookingCounter extends StatefulWidget {
+class CookingCounter extends ConsumerWidget {
   const CookingCounter({super.key});
 
-  @override
-  State<CookingCounter> createState() => _CookingCounterState();
-}
-
-class _CookingCounterState extends State<CookingCounter> {
-  int _cookingCount = 0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cookingCount = ref.watch(counterProvider);
+
     return Card(
       elevation: 4,
       child: Container(
@@ -38,7 +36,7 @@ class _CookingCounterState extends State<CookingCounter> {
             ),
             const SizedBox(height: 16),
             Text(
-              '$_cookingCount',
+              '$cookingCount',
               style: const TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.bold,
@@ -51,18 +49,16 @@ class _CookingCounterState extends State<CookingCounter> {
               children: [
                 FloatingActionButton.small(
                   onPressed: () {
-                    setState(() {
-                      if (_cookingCount > 0) _cookingCount--;
-                    });
+                    // 6. Вызываем метод decrement из провайдера
+                    ref.read(counterProvider.notifier).decrement();
                   },
                   backgroundColor: Colors.red,
                   child: const Icon(Icons.remove, color: Colors.white),
                 ),
                 FloatingActionButton.small(
                   onPressed: () {
-                    setState(() {
-                      _cookingCount++;
-                    });
+                    // 7. Вызываем метод increment из провайдера
+                    ref.read(counterProvider.notifier).increment();
                   },
                   backgroundColor: Colors.green,
                   child: const Icon(Icons.add, color: Colors.white),

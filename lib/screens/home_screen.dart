@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'recipes_screen.dart';
-import 'ingredients_screen.dart';
-import 'menu_screen.dart';
-import 'about_screen.dart';
-import 'cooking_counter.dart';
 import '../routes/app_routes.dart';
+import 'cooking_counter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -38,38 +34,36 @@ class HomeScreen extends StatelessWidget {
               context,
               '🍳 Рецепты',
               'Коллекция ваших любимых рецептов',
-              () {
-                context.push(
-                  AppRoutes.recipes,
-                );
-              },
+              () => context.push(AppRoutes.recipes),
             ),
             const SizedBox(height: 12),
             _buildMenuButton(
               context,
               '🥕 Ингредиенты',
               'База продуктов и ингредиентов',
-              () {
-                context.push(AppRoutes.ingredients);
-              },
+              () => context.push(AppRoutes.ingredients),
             ),
             const SizedBox(height: 12),
             _buildMenuButton(
               context,
               '📋 Меню',
               'Планирование блюд и меню',
-              () {
-                context.push(AppRoutes.menu);
-              },
+              () => context.push(AppRoutes.menu),
+            ),
+            const SizedBox(height: 12),
+            // 1. Добавили кнопку для нового экрана
+            _buildMenuButton(
+              context,
+              '🛒 Список покупок',
+              'Что нужно купить в магазине',
+              () => context.push(AppRoutes.shoppingList),
             ),
             const SizedBox(height: 12),
             _buildMenuButton(
               context,
               'ℹ️ О приложении',
               'Информация о приложении',
-              () {
-                context.push(AppRoutes.about);
-              },
+              () => context.push(AppRoutes.about),
             ),
           ],
         ),

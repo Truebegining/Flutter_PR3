@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../routes/app_routes.dart';
 
-class AboutScreen extends StatefulWidget {
+// 1. Заменили StatefulWidget на StatelessWidget, так как у экрана нет состояния
+class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
-  @override
-  State<AboutScreen> createState() => _AboutScreenState();
-}
-
-class _AboutScreenState extends State<AboutScreen> {
-  void _goToHomeWithReplacement() {
+  // 2. Метод навигации теперь просто метод класса, а не класса State
+  void _goToHomeWithReplacement(BuildContext context) {
     context.go(
       AppRoutes.home,
     );
@@ -128,7 +125,8 @@ class _AboutScreenState extends State<AboutScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: _goToHomeWithReplacement,
+                        // 3. Передали context в метод навигации
+                        onPressed: () => _goToHomeWithReplacement(context),
                         icon: const Icon(Icons.home),
                         label: const Text('Вернуться на главную (замена экрана)'),
                       ),

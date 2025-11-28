@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'routes/app_routes.dart';
 
 void main() {
   AppRoutes.initialize();
-  runApp(const CookingApp());
+  // Оборачиваем все приложение в ProviderScope, чтобы провайдеры были доступны
+  runApp(const ProviderScope(child: CookingApp()));
 }
 
 class CookingApp extends StatelessWidget {

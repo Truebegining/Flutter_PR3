@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../providers/menu_provider.dart';
 
-class MenuScreen extends StatefulWidget {
+class MenuScreen extends ConsumerStatefulWidget {
   const MenuScreen({super.key});
 
   @override
-  State<MenuScreen> createState() => _MenuScreenState();
+  ConsumerState<MenuScreen> createState() => _MenuScreenState();
 }
 
-class _MenuScreenState extends State<MenuScreen> {
-  final List<Map<String, dynamic>> _menuItems = [];
+class _MenuScreenState extends ConsumerState<MenuScreen> {
   final TextEditingController _dishController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
+
   void _addMenuItem() {
     if (_dishController.text.isNotEmpty) {
-      setState(() {
-        _menuItems.add({
-          'dish': _dishController.text,
-          'date': _dateController.text.isNotEmpty ? _dateController.text : 'Дата не указана',
-          'notes': _notesController.text.isNotEmpty ? _notesController.text : 'Без заметок',
-          'isCompleted': false,
-        });
-      });
+      ref.read(menuItemsProvider.notifier).addMenuItem(
+            dish: _dishController.text,
+            date: _dateController.text,
+            notes: _notesController.text,
+          );
       _dishController.clear();
       _dateController.clear();
       _notesController.clear();
@@ -33,21 +32,20 @@ class _MenuScreenState extends State<MenuScreen> {
   void _goBack() {
     context.pop();
   }
-
-  void _toggleCompleted(int index) {
-    setState(() {
-      _menuItems[index]['isCompleted'] = !_menuItems[index]['isCompleted'];
-    });
+  
+  void _toggleCompleted(String itemId) {
+      ref.read(menuItemsProvider.notifier).toggleCompleted(itemId);
   }
 
-  void _deleteMenuItem(int index) {
-    setState(() {
-      _menuItems.removeAt(index);
-    });
+  void _deleteMenuItem(String itemId) {
+      ref.read(menuItemsProvider.notifier).deleteMenuItem(itemId);
   }
+
 
   @override
   Widget build(BuildContext context) {
+    final menuItems = ref.watch(menuItemsProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Меню'),
@@ -118,8 +116,9 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
             ),
             const SizedBox(height: 20),
+            // --- Список блюд теперь использует данные из провайдера ---
             Expanded(
-              child: _menuItems.isEmpty
+              child: menuItems.isEmpty
                   ? Center(
                       child: Text(
                         'Пока нет блюд в меню\nДобавьте первое!',
@@ -131,26 +130,27 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                     )
                   : ListView.builder(
-                      itemCount: _menuItems.length,
+                      itemCount: menuItems.length,
                       itemBuilder: (context, index) {
-                        final menuItem = _menuItems[index];
+                        // 6. Используем нашу модель MenuItem вместо Map
+                        final menuItem = menuItems[index];
                         return Card(
                           margin: const EdgeInsets.only(bottom: 12),
-                          color: menuItem['isCompleted'] 
+                          color: menuItem.isCompleted
                               ? Colors.green.withOpacity(0.1)
                               : null,
                           child: ListTile(
                             leading: Checkbox(
-                              value: menuItem['isCompleted'],
-                              onChanged: (_) => _toggleCompleted(index),
+                              value: menuItem.isCompleted,
+                              onChanged: (_) => _toggleCompleted(menuItem.id),
                               activeColor: Colors.green,
                             ),
                             title: Text(
-                              menuItem['dish'],
+                              menuItem.dish,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                decoration: menuItem['isCompleted'] 
+                                decoration: menuItem.isCompleted
                                     ? TextDecoration.lineThrough
                                     : null,
                               ),
@@ -160,16 +160,16 @@ class _MenuScreenState extends State<MenuScreen> {
                               children: [
                                 const SizedBox(height: 4),
                                 Text(
-                                  menuItem['date'],
+                                  menuItem.date,
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[600],
                                   ),
                                 ),
-                                if (menuItem['notes'] != 'Без заметок') ...[
+                                if (menuItem.notes != 'Без заметок') ...[
                                   const SizedBox(height: 4),
                                   Text(
-                                    menuItem['notes'],
+                                    menuItem.notes,
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey[500],
@@ -183,9 +183,9 @@ class _MenuScreenState extends State<MenuScreen> {
                                 Icons.delete,
                                 color: Colors.red,
                               ),
-                              onPressed: () => _deleteMenuItem(index),
+                              onPressed: () => _deleteMenuItem(menuItem.id),
                             ),
-                            onTap: () => _toggleCompleted(index),
+                            onTap: () => _toggleCompleted(menuItem.id),
                           ),
                         );
                       },
