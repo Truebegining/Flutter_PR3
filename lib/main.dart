@@ -4,15 +4,20 @@ import 'routes/app_routes.dart';
 
 void main() {
   AppRoutes.initialize();
-  // Оборачиваем все приложение в ProviderScope, чтобы провайдеры были доступны
   runApp(const ProviderScope(child: CookingApp()));
 }
 
-class CookingApp extends StatelessWidget {
+class CookingApp extends ConsumerWidget {
   const CookingApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Важный момент: чтобы редирект работал при изменении состояния авторизации,
+    // нам нужно, чтобы маршрутизатор перестраивался или слушал изменения.
+    // В текущей реализации GoRouter создан как статическое поле, что не идеально
+    // для реактивности, но сработает при переходах. 
+    // Для полноценной реактивности лучше перенести router в провайдер.
+    
     return MaterialApp.router(
       title: 'Кулинарный дневник',
       routerConfig: AppRoutes.router,

@@ -1,24 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../routes/app_routes.dart';
+import '../providers/auth_provider.dart';
 import 'cooking_counter.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Кулинарный дневник'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              ref.read(authProvider.notifier).logout();
+              // После выхода сработает редирект в AppRoutes
+              // Но для надежности можно явно перейти
+              context.go(AppRoutes.login);
+            },
+            tooltip: 'Выйти',
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 20),
+            if (user != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Text(
+                  'Привет, ${user.username}!',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             const CookingCounter(),
             const SizedBox(height: 30),
             const Text(
@@ -51,12 +78,18 @@ class HomeScreen extends StatelessWidget {
               () => context.push(AppRoutes.menu),
             ),
             const SizedBox(height: 12),
-            // 1. Добавили кнопку для нового экрана
             _buildMenuButton(
               context,
               '🛒 Список покупок',
               'Что нужно купить в магазине',
               () => context.push(AppRoutes.shoppingList),
+            ),
+            const SizedBox(height: 12),
+            _buildMenuButton(
+              context,
+              '📝 Заметки',
+              'Ваши кулинарные идеи и заметки',
+              () => context.push(AppRoutes.notes),
             ),
             const SizedBox(height: 12),
             _buildMenuButton(
